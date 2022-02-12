@@ -36,6 +36,6 @@ def update_tracker(tracker_id: str, tracker: Tracker):
 @router.delete("/{tracker_id}")
 def delete_tracker_by_id(tracker_id: str):
     if tracker_id in trackers.keys():
-        del trackers[tracker_id]
+        trackers[tracker_id]["deleted"] = True
         return {"message": "Tracker has been deleted"}
     return {"message": "Tracker not found"}

@@ -8,6 +8,7 @@ class Tracker(BaseModel):
     url_address: str
     created_at: Optional[datetime] = datetime.now()
     is_offer: Optional[bool] = None
+    deleted: Optional[bool] = False
 
 
 trackers = {
