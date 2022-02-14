@@ -5,10 +5,8 @@ WORKDIR /app
 RUN useradd -m -r ninja && \
     chown ninja /app
 
-COPY requirements.txt requirements.txt
-RUN pip3 install --no-cache-dir -r requirements.txt
-
 COPY . .
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 USER ninja
 

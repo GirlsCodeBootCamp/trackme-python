@@ -18,7 +18,7 @@ pip install -r requirements.txt
 
 Run the application
 
-```basjj
+```bash
 uvicorn main:app --reload
 ```
 
