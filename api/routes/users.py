@@ -1,8 +1,10 @@
 from fastapi import APIRouter
-from pydantic import BaseModel
+
+from models.users import User, users
 
 router = APIRouter()
-users = {}
+
+user_id_gen = 0
 
 
 def email_duplicates(email: str):
@@ -13,18 +15,25 @@ def email_duplicates(email: str):
     return False
 
 
-class User(BaseModel):
-    first_name: str
-    last_name: str
-    email: str
-
-
-@router.post("/create-user/{user_id}")
-def create_user(user_id: str, user: User):
-    if user_id in users:
-        return {"Error": "User id has already been used."}
+@router.post("/")
+def create_user(user: User):
     if email_duplicates(user.email):
         return {"Error": "Email address has already been used."}
-    users[user_id] = user
+    global user_id_gen
+    user_id_gen += 1
+    user.user_id = user_id_gen
+    users[user_id_gen] = user
+    return users[user_id_gen]
+
+
+@router.get("/")
+def user_list():
+    return list(users.values())
+
+
+@router.get("/{user_id}")
+def user_by_id(user_id: int):
+    if user_id not in users:
+        return {"Error": "User not found."}
 
     return users[user_id]
