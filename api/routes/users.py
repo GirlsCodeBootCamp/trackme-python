@@ -6,6 +6,7 @@ router = APIRouter()
 users = {}
 user_id_gen = 0
 
+
 def email_duplicates(email: str):
     users_values = list(users.values())
     for user in users_values:
