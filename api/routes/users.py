@@ -21,14 +21,13 @@ def create_user(user: User):
         return {"Error": "Email address has already been used."}
     global user_id_gen
     user_id_gen += 1
-    user.user_id = user_id_gen
     users[user_id_gen] = user
     return users[user_id_gen]
 
 
 @router.get("/")
 def user_list():
-    return list(users.values())
+    return users
 
 
 @router.get("/{user_id}")
