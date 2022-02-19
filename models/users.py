@@ -8,4 +8,3 @@ class User(BaseModel):
     first_name: str
     last_name: str
     email: str
-    user_id: pydantic.types.Optional[int] = None
