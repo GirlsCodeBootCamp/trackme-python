@@ -14,11 +14,12 @@ jobs:
   #         # Full git history is needed to get a proper list of changed files within `super-linter`
   #         fetch-depth: 0
   #     # Run Linter against code base #
-  #     - name: Lint Code Base
-  #       uses: github/super-linter@v4
+  #     - name: Super-Linter
+  #       uses: github/super-linter@v4.9.0
+
   #       env:
   #         VALIDATE_ALL_CODEBASE: false
-  #         DEFAULT_BRANCH: master
+  #         # DEFAULT_BRANCH: master
   #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build:
@@ -34,4 +35,4 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "trackme-ninja-api"
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
-          usedocker: true
+          procfile: "web: uvicorn main:app --reload"
