@@ -14,4 +14,4 @@ ARG GIT_HASH
 ENV GIT_HASH=${GIT_HASH:-dev}
 
 EXPOSE 80
-ENTRYPOINT [ "python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80" ] 
+ENTRYPOINT ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80" ] 
