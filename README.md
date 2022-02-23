@@ -1,5 +1,7 @@
 # TrackMe Ninja
 
+[![GitHub Super-Linter](https://github.com/GirlsCodeBootCamp/trackme-python/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/GirlsCodeBootCamp/trackme-python/actions)
+
 ## About the application
 
 TrackMeNinja identifies changes on the website you choose and alerts you on them. Don't spend time going through many websites yourself, leave it to TrackMeNinja
