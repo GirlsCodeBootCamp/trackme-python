@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-
+from typing import Optional
 from models.users import User, users
 
 router = APIRouter()
@@ -26,8 +26,12 @@ def create_user(user: User):
 
 
 @router.get("/")
-def user_list():
-    return users
+def user_list_filtered(last_name: Optional[str] = None):
+    users_filtered = {}
+    for user_id, user in users.items():
+        if user['last_name'] == last_name:
+            users_filtered[user_id] = user
+    return {"size": len(users_filtered), "data": users_filtered}
 
 
 @router.get("/{user_id}")
