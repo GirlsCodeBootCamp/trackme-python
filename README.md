@@ -37,3 +37,29 @@ More documentation on Docker:
 
 - [uvicorn Docker image](https://docker-fastapi-projects.readthedocs.io/en/latest/uvicorn.html)
 - [Docker image with Uvicorn managed by Gunicorn for high-performance FastAPI web applications ](https://pythonawesome.com/docker-image-with-uvicorn-managed-by-gunicorn-for-high-performance-fastapi-web-applications/)
+
+### Compose
+The web application will be available at http://localhost
+
+To start the containers, use the following command:
+```
+$ docker-compose up
+```
+To check if the containers are running, use:
+```
+$ docker-compose ps
+```
+To rebuild all the containers, use the following command:
+```
+$ docker-compose up --build
+```
+To restart the web service, run:
+```
+$ docker-compose restart web
+```
+
+### Logs
+To tail logs, run:
+```
+$ docker-compose logs -f web
+```
