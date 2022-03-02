@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from api.api import router as api_router
 from fastapi.middleware.cors import CORSMiddleware
 
+from sql_app import models, engine
 
 def get_application():
     application = FastAPI()
@@ -20,5 +21,10 @@ def get_application():
     )
     return application
 
+models.Base.metadata.create_all(bind=engine)
 
 app = get_application()
+
+
+
+
