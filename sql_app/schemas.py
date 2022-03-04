@@ -40,10 +40,11 @@ class User(UserBase):
     class Config:
         orm_mode = True
 
-
+'''
 class UserOut(User):
     trackers: List[Tracker]
 
 
 class TrackerOut(Tracker):
     users: List[User]
+'''

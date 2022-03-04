@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends
+#from typing import List
+from fastapi import APIRouter, Depends, HTTPException
 import random
 
 # from models.trackers import Tracker, trackers
@@ -13,41 +14,41 @@ router = APIRouter()
 
 # /trackers/
 
-
 @router.get("/", response_model=list[schemas.Tracker])
 def read_trackers_all(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     trackers = crud.get_trackers(db, skip=skip, limit=limit)
     return trackers
 
-# /trackers/611
-
-
 @router.get("/{tracker_id}", response_model=schemas.Tracker)
 def read_tracker_by_id(tracker_id: int, db: Session = Depends(get_db)):
-    # if tracker_id in trackers.keys():
-    #     return trackers[tracker_id]
-    # return {"message": "Tracker not found"}
-    return crud.get_tracker(tracker_id=tracker_id)
+    db_tracker = crud.get_tracker(db, tracker_id=tracker_id)
+    if db_tracker is None:
+        raise HTTPException(status_code=404, detail="Tracker not found")
+    return db_tracker
 
 # create orphan tracker without user ownership
 
 
 @router.post("/", response_model=schemas.Tracker)
 def create_tracker(tracker: schemas.TrackerCreate, db: Session = Depends(get_db)):
+    db_tracker = crud.get_tracker_by_url(db, url_address=tracker.url_address)
+    if db_tracker is not None:
+        raise HTTPException(status_code=400, detail="URL address already registered")
     return crud.create_tracker(db, tracker)
 
 
-# @router.put("/{tracker_id}")
-# def update_tracker(tracker_id: str, tracker: Tracker, db: Session = Depends(get_db)):
-#     if tracker_id in trackers.keys():
-#         trackers[tracker_id] = tracker
-#         return {"tracker_name": tracker.name, "tracker_id": tracker_id}
-#     return {"message": "Tracker not found"}
+@router.put("/{tracker_id}/", response_model=schemas.Tracker)
+def update_tracker(tracker_id: str, tracker: schemas.TrackerBase, db: Session = Depends(get_db)):
+    db_tracker = crud.update_tracker(db, tracker_id, tracker)
+    if db_tracker is None:
+        raise HTTPException(status_code=404, detail="Tracker not found")
+    return crud.delete_tracker_by_id(db, tracker_id=tracker_id)
 
 
-# @router.delete("/{tracker_id}")
-# def delete_tracker_by_id(tracker_id: str, db: Session = Depends(get_db)):
-#     if tracker_id in trackers.keys():
-#         trackers[tracker_id]["deleted"] = True
-#         return {"message": "Tracker has been deleted"}
-#     return {"message": "Tracker not found"}
+
+@router.delete("/{tracker_id}", response_model=schemas.Tracker)
+def delete_tracker_by_id(tracker_id: str, db: Session = Depends(get_db)):
+    db_tracker = crud.delete_tracker_by_id(db, tracker_id=tracker_id)
+    if db_tracker is None:
+        raise HTTPException(status_code=404, detail="Tracker not found")
+    return crud.delete_tracker_by_id(db, tracker_id=tracker_id)
