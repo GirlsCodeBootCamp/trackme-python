@@ -2,8 +2,8 @@ version: '3'
 services:
   web:
     build: .
-    command: uvicorn main:app --host 0.0.0.0 --reload
+    command: uvicorn main:app --host 0.0.0.0 --port 80 --reload
     volumes:
       - .:/app
     ports:
-      - 80:8000
+      - 80:80
