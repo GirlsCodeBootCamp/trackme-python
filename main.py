@@ -24,6 +24,7 @@ def get_application():
     return application
 
 
+print("This is test message")
 models.Base.metadata.create_all(bind=engine)
 
 app = get_application()
