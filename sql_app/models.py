@@ -29,6 +29,7 @@ class Tracker(Base):
     name = Column(String)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     deleted = Column(Boolean, default=False)
+    frequency = Column(Integer, default=24)
 
     owners = relationship("User", secondary=user_tracker,
                           back_populates="trackers")
