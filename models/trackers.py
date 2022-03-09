@@ -9,6 +9,7 @@ class Tracker(BaseModel):
     created_at: Optional[datetime] = datetime.now()
     is_offer: Optional[bool] = None
     deleted: Optional[bool] = False
+    frequency: Optional[int] = 24
 
 
 trackers = {

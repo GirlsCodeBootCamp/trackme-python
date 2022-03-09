@@ -7,6 +7,7 @@ from datetime import datetime
 class TrackerBase(BaseModel):
     url_address: str
     name: Optional[str] = None
+    frequency: Optional[int] = 24
 
 
 class TrackerCreate(TrackerBase):
@@ -39,6 +40,7 @@ class User(UserBase):
 
     class Config:
         orm_mode = True
+
 
 '''
 class UserOut(User):
