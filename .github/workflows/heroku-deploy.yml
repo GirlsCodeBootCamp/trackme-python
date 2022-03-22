@@ -35,4 +35,5 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "trackme-ninja-api"
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
-          procfile: "web: uvicorn main:app --port 17995 --host 0.0.0.0"
+          usedocker: true
+          # procfile: "web: uvicorn main:app --port 17995 --host 0.0.0.0"
