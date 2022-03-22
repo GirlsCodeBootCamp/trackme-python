@@ -32,7 +32,7 @@ Docker enables you to run application directly without a need to install and con
 # build the image
 docker build . -t trackme
 # run the application
-docker run --rm -it  -p 80:80/tcp  trackme:latest
+docker run --rm -it  -p 8000:8000/tcp trackme:latest
 ```
 
 More documentation on Docker:

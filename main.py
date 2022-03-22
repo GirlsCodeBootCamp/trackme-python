@@ -14,4 +14,5 @@ def get_application():
 app = get_application()
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=os.getenv("PORT"))
+    server_port = os.getenv("PORT") or 8000
+    uvicorn.run("main:app", host="0.0.0.0", port=server_port)
