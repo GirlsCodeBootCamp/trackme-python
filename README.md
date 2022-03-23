@@ -4,7 +4,7 @@
 
 ## About the application
 
-TrackMeNinja identifies changes on the website you choose and alerts you on them. Don't spend time going through many websites yourself, leave it to TrackMeNinja
+TrackMeNinja identifies changes on the site you choose and alerts you on them. Don't spend time going through many sites yourself, leave it to TrackMeNinja
 
 ## Running on your machine
 
@@ -38,30 +38,40 @@ docker run --rm -it  -p 8000:8000/tcp trackme:latest
 More documentation on Docker:
 
 - [uvicorn Docker image](https://docker-fastapi-projects.readthedocs.io/en/latest/uvicorn.html)
-- [Docker image with Uvicorn managed by Gunicorn for high-performance FastAPI web applications ](https://pythonawesome.com/docker-image-with-uvicorn-managed-by-gunicorn-for-high-performance-fastapi-web-applications/)
+- [Docker image with Uvicorn managed by Gunicorn for high-performance FastAPI web applications](https://pythonawesome.com/docker-image-with-uvicorn-managed-by-gunicorn-for-high-performance-fastapi-web-applications/)
 
 ### Compose
-The web application will be available at http://localhost
+
+The web application will be available at [http://localhost](http://localhost)
 
 To start the containers, use the following command:
+
+```bash
+docker-compose up
 ```
-$ docker-compose up
-```
+
 To check if the containers are running, use:
+
+```bash
+docker-compose ps
 ```
-$ docker-compose ps
-```
+
 To rebuild all the containers, use the following command:
+
+```bash
+docker-compose up --build
 ```
-$ docker-compose up --build
-```
+
 To restart the web service, run:
-```
-$ docker-compose restart web
+
+```bash
+docker-compose restart web
 ```
 
 ### Logs
+
 To tail logs, run:
-```
-$ docker-compose logs -f web
+
+```bash
+docker-compose logs -f web
 ```

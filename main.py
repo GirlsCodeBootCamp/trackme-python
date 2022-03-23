@@ -1,10 +1,9 @@
-from fastapi import FastAPI
-
-from api.api import router as api_router
-import uvicorn
 import os
-from fastapi.middleware.cors import CORSMiddleware
 
+import uvicorn
+from api.api import router as api_router
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from sql_app import models
 from sql_app.database import engine
 
