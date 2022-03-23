@@ -16,10 +16,9 @@ jobs:
       # Run Linter against code base #
       - name: Super-Linter
         uses: github/super-linter@v4.9.0
-
         env:
           VALIDATE_ALL_CODEBASE: false
-          # DEFAULT_BRANCH: master
+          DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build:
