@@ -13,3 +13,5 @@ USER ninja
 ARG GIT_HASH
 ENV GIT_HASH=${GIT_HASH:-dev}
 
+EXPOSE 8000
+CMD ["python3", "main.py"]
