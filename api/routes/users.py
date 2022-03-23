@@ -1,38 +1,37 @@
-from fastapi import APIRouter
-
-from models.users import User, users
+from fastapi import APIRouter, Depends, HTTPException
+from sql_app.database import get_db
+from sqlalchemy.orm import Session
+from sql_app import crud, schemas
 
 router = APIRouter()
 
-user_id_gen = 0
+# Create user
+
+@router.post("/", response_model=schemas.User)
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    db_user = crud.get_user_by_email(db, email=user.email)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    return crud.create_user(db, user)
 
 
-def email_duplicates(email: str):
-    users_values = list(users.values())
-    for user in users_values:
-        if user.email == email:
-            return True
-    return False
+@router.get("/", response_model=list[schemas.User])
+def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    return crud.get_users(db, skip=skip, limit=limit)
 
 
-@router.post("/")
-def create_user(user: User):
-    if email_duplicates(user.email):
-        return {"Error": "Email address has already been used."}
-    global user_id_gen
-    user_id_gen += 1
-    users[user_id_gen] = user
-    return users[user_id_gen]
+@router.get("/{user_id}", response_model=schemas.User)
+def read_user_by_id(user_id: int, db: Session = Depends(get_db)):
+    db_user = crud.get_user(db, user_id=user_id)
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return db_user
 
 
-@router.get("/")
-def user_list():
-    return users
-
-
-@router.get("/{user_id}")
-def user_by_id(user_id: int):
-    if user_id not in users:
-        return {"Error": "User not found."}
-
-    return users[user_id]
+@router.post("/{user_id}/tracker", response_model=schemas.Tracker)
+def create_user_tracker(user_id: int, tracker: schemas.TrackerCreate, db: Session = Depends(get_db)):
+    db_tracker = crud.create_user_tracker(db, tracker, user_id)
+    if not db_tracker:       
+        raise HTTPException(status_code=404, detail="User not found")
+    # connect to the user in user_tracker
+    return db_tracker
