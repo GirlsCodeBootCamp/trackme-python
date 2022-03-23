@@ -31,7 +31,9 @@ def read_user_by_id(user_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/{user_id}/tracker", response_model=trackers.Tracker)
-def create_user_tracker(user_id: int, tracker: trackers.TrackerCreate, db: Session = Depends(get_db)):
+def create_user_tracker(
+    user_id: int, tracker: trackers.TrackerCreate, db: Session = Depends(get_db)
+):
     db_tracker = crud.create_user_tracker(db, tracker, user_id)
     if not db_tracker:
         raise HTTPException(status_code=404, detail="User not found")

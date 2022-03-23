@@ -14,8 +14,8 @@ Base = declarative_base()
 
 # Dependency
 def get_db():
-    db = SessionLocal()
+    data_base = SessionLocal()
     try:
-        yield db
+        yield data_base
     finally:
-        db.close()
+        data_base.close()

@@ -21,7 +21,16 @@ pip install -r requirements.txt
 Run the application
 
 ```bash
-uvicorn main:app --reload
+python3 main.py
+```
+
+### Code Lint
+
+CI/CD pipeline uses github/super-linter for linting the code. More information on [super-linter pages](https://github.com/github/super-linter/blob/main/docs/run-linter-locally.md)
+
+```bash
+docker pull github/super-linter:latest
+docker run -e RUN_LOCAL=true -v ${PWD}:/tmp/lint github/super-linter
 ```
 
 ### Docker

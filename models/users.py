@@ -1,7 +1,6 @@
-from typing import List, Optional
+from typing import List
 
 from pydantic import BaseModel
-from datetime import datetime
 from .trackers import Tracker
 
 
@@ -16,7 +15,6 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
-
     trackers: List[Tracker] = []
 
     class Config:

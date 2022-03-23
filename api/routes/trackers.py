@@ -6,10 +6,6 @@ from models import trackers
 
 router = APIRouter()
 
-# Dependency
-
-# /trackers/
-
 
 @router.get("/", response_model=list[trackers.Tracker])
 def read_trackers_all(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
@@ -23,20 +19,20 @@ def read_tracker_by_id(tracker_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Tracker not found")
     return db_tracker
 
+
 # create orphan tracker without user ownership
-
-
 @router.post("/", response_model=trackers.Tracker)
 def create_tracker(tracker: trackers.TrackerCreate, db: Session = Depends(get_db)):
     db_tracker = crud.get_tracker_by_url(db, url_address=tracker.url_address)
     if db_tracker:
-        raise HTTPException(
-            status_code=400, detail="URL address already registered")
+        raise HTTPException(status_code=400, detail="URL address already registered")
     return crud.create_tracker(db, tracker)
 
 
 @router.put("/{tracker_id}/", response_model=trackers.Tracker)
-def update_tracker(tracker_id: str, tracker: trackers.TrackerBase, db: Session = Depends(get_db)):
+def update_tracker(
+    tracker_id: str, tracker: trackers.TrackerBase, db: Session = Depends(get_db)
+):
     db_tracker = crud.update_tracker(db, tracker_id, tracker)
     if not db_tracker:
         raise HTTPException(status_code=404, detail="Tracker not found")
