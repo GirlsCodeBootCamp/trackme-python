@@ -1,6 +1,6 @@
+from models import trackers, users
 from sqlalchemy.orm import Session, joinedload
 
-from models import trackers, users
 from . import models
 
 

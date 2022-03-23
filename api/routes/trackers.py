@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
+from models import trackers
+from sql_app import crud
 from sql_app.database import get_db
 from sqlalchemy.orm import Session
-from sql_app import crud
-from models import trackers
 
 router = APIRouter()
 
@@ -31,7 +31,7 @@ def create_tracker(tracker: trackers.TrackerCreate, db: Session = Depends(get_db
 
 @router.put("/{tracker_id}/", response_model=trackers.Tracker)
 def update_tracker(
-    tracker_id: str, tracker: trackers.TrackerBase, db: Session = Depends(get_db)
+    tracker_id: int, tracker: trackers.TrackerBase, db: Session = Depends(get_db)
 ):
     db_tracker = crud.update_tracker(db, tracker_id, tracker)
     if not db_tracker:
@@ -40,7 +40,7 @@ def update_tracker(
 
 
 @router.delete("/{tracker_id}", response_model=trackers.Tracker)
-def delete_tracker_by_id(tracker_id: str, db: Session = Depends(get_db)):
+def delete_tracker_by_id(tracker_id: int, db: Session = Depends(get_db)):
     db_tracker = crud.delete_tracker_by_id(db, tracker_id=tracker_id)
     if not db_tracker:
         raise HTTPException(status_code=404, detail="Tracker not found")
