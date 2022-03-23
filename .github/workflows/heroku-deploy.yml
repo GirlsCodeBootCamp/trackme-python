@@ -1,0 +1,39 @@
+---
+name: Deploy API dev to Heroku
+
+on: push
+
+jobs:
+  lint:
+    name: Lint Code Base
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the code base #
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          # Full git history needed to get a proper list of changed files
+          fetch-depth: 0
+      # Run Linter against code base #
+      - name: Super-Linter
+        uses: github/super-linter@v4.9.0
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      # Deploy application after successful lint
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "trackme-ninja-api"
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+          usedocker: true
+          # procfile: "web: uvicorn main:app --port 17995 --host 0.0.0.0"
