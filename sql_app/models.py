@@ -1,13 +1,23 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, Table
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Integer,
+    String,
+    Table,
+)
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from .database import Base
 
-user_tracker = Table("user_tracker", Base.metadata,
-                     Column("user_id", ForeignKey(
-                         "users.id"), primary_key=True),
-                     Column("tracker_id", ForeignKey("trackers.id"), primary_key=True))
+user_tracker = Table(
+    "user_tracker",
+    Base.metadata,
+    Column("user_id", ForeignKey("users.id"), primary_key=True),
+    Column("tracker_id", ForeignKey("trackers.id"), primary_key=True),
+)
 
 
 class User(Base):
@@ -17,8 +27,7 @@ class User(Base):
     username = Column(String, nullable=False)
     email = Column(String, unique=True, index=True)
 
-    trackers = relationship(
-        "Tracker", secondary=user_tracker, back_populates="owners")
+    trackers = relationship("Tracker", secondary=user_tracker, back_populates="owners")
 
 
 class Tracker(Base):
@@ -29,7 +38,5 @@ class Tracker(Base):
     name = Column(String)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     deleted = Column(Boolean, default=False)
-    frequency = Column(Integer, default=24)
 
-    owners = relationship("User", secondary=user_tracker,
-                          back_populates="trackers")
+    owners = relationship("User", secondary=user_tracker, back_populates="trackers")

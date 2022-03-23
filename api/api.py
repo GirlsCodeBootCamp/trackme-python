@@ -1,8 +1,5 @@
+from api.routes import trackers, users
 from fastapi import APIRouter
-
-from api.routes import trackers
-
-from api.routes import users
 
 router = APIRouter()
 
