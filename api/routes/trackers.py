@@ -1,5 +1,5 @@
 from api.routes.utils import VerifyToken
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from models import trackers
 from sql_app import crud
