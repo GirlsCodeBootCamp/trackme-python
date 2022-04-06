@@ -18,7 +18,6 @@ def validate_token(token):
 
 @router.get("/", response_model=list[trackers.Tracker])
 def read_trackers_all(
-    response: Response,
     skip: int = 0,
     limit: int = 100,
     db: Session = Depends(get_db),
@@ -30,7 +29,6 @@ def read_trackers_all(
 
 @router.get("/{tracker_id}", response_model=trackers.Tracker)
 def read_tracker_by_id(
-    response: Response,
     tracker_id: int,
     db: Session = Depends(get_db),
     token: HTTPAuthorizationCredentials = Depends(token_auth_scheme),
