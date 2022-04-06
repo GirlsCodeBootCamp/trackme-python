@@ -2,8 +2,9 @@
 """
 
 import os
-import jwt
 from configparser import ConfigParser
+
+import jwt
 
 
 def set_up():
@@ -43,12 +44,12 @@ class VerifyToken:
         try:
             self.signing_key = self.jwks_client.get_signing_key_from_jwt(self.token).key
         except jwt.exceptions.PyJWKClientError as error:
-            return {"status": "error", "msg": error.__str__()}
+            return {"status": "error", "message": error.__str__()}
         except jwt.exceptions.DecodeError as error:
-            return {"status": "error", "msg": error.__str__()}
+            return {"status": "error", "message": error.__str__()}
 
         try:
-            payload = jwt.decode(
+            jwt.decode(
                 self.token,
                 self.signing_key,
                 algorithms=self.config["ALGORITHMS"],
@@ -58,4 +59,4 @@ class VerifyToken:
         except Exception as e:
             return {"status": "error", "message": str(e)}
 
-        return payload
+        return None

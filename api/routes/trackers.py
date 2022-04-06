@@ -1,13 +1,19 @@
-from fastapi import APIRouter, Depends, HTTPException, Response, status
-from fastapi.security import HTTPBearer
+from api.routes.utils import VerifyToken
+from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from models import trackers
 from sql_app import crud
 from sql_app.database import get_db
 from sqlalchemy.orm import Session
-from .utils import VerifyToken
 
 router = APIRouter()
 token_auth_scheme = HTTPBearer()
+
+
+def validate_token(token):
+    result = VerifyToken(token.credentials).verify()
+    if result:
+        raise HTTPException(status_code=400, detail=result)
 
 
 @router.get("/", response_model=list[trackers.Tracker])
@@ -16,13 +22,9 @@ def read_trackers_all(
     skip: int = 0,
     limit: int = 100,
     db: Session = Depends(get_db),
-    token: str = Depends(token_auth_scheme),
+    token: HTTPAuthorizationCredentials = Depends(token_auth_scheme),
 ):
-    result = VerifyToken(token.credentials).verify()
-    if result.get("status"):
-        response.status_code = status.HTTP_400_BAD_REQUEST
-        return result
-    # return result
+    validate_token(token)
     return crud.get_trackers(db, skip=skip, limit=limit)
 
 
@@ -31,12 +33,9 @@ def read_tracker_by_id(
     response: Response,
     tracker_id: int,
     db: Session = Depends(get_db),
-    token: str = Depends(token_auth_scheme),
+    token: HTTPAuthorizationCredentials = Depends(token_auth_scheme),
 ):
-    result = VerifyToken(token.credentials).verify()
-    if result.get("status"):
-        response.status_code = status.HTTP_400_BAD_REQUEST
-        return result
+    validate_token(token)
     db_tracker = crud.get_tracker(db, tracker_id=tracker_id)
     if not db_tracker:
         raise HTTPException(status_code=404, detail="Tracker not found")
