@@ -23,7 +23,6 @@ def set_up():
             "ISSUER": os.getenv("ISSUER", "https://your.domain.com/"),
             "ALGORITHMS": os.getenv("ALGORITHMS", "RS256"),
         }
-    # print(config["DOMAIN"])
     return config
 
 
@@ -49,7 +48,7 @@ class VerifyToken:
             return {"status": "error", "message": error.__str__()}
 
         try:
-            jwt.decode(
+            payload = jwt.decode(
                 self.token,
                 self.signing_key,
                 algorithms=self.config["ALGORITHMS"],
@@ -59,4 +58,4 @@ class VerifyToken:
         except Exception as e:
             return {"status": "error", "message": str(e)}
 
-        return None
+        return payload

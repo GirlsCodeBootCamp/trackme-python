@@ -12,7 +12,7 @@ token_auth_scheme = HTTPBearer()
 
 def validate_token(token):
     result = VerifyToken(token.credentials).verify()
-    if result:
+    if result.get("status"):
         raise HTTPException(status_code=400, detail=result)
 
 
