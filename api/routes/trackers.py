@@ -1,19 +1,39 @@
+from api.routes.utils import VerifyToken
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from models import trackers
 from sql_app import crud
 from sql_app.database import get_db
 from sqlalchemy.orm import Session
 
 router = APIRouter()
+token_auth_scheme = HTTPBearer()
+
+
+def validate_token(token):
+    result = VerifyToken(token.credentials).verify()
+    if result.get("status"):
+        raise HTTPException(status_code=400, detail=result)
 
 
 @router.get("/", response_model=list[trackers.Tracker])
-def read_trackers_all(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def read_trackers_all(
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+    token: HTTPAuthorizationCredentials = Depends(token_auth_scheme),
+):
+    validate_token(token)
     return crud.get_trackers(db, skip=skip, limit=limit)
 
 
 @router.get("/{tracker_id}", response_model=trackers.Tracker)
-def read_tracker_by_id(tracker_id: int, db: Session = Depends(get_db)):
+def read_tracker_by_id(
+    tracker_id: int,
+    db: Session = Depends(get_db),
+    token: HTTPAuthorizationCredentials = Depends(token_auth_scheme),
+):
+    validate_token(token)
     db_tracker = crud.get_tracker(db, tracker_id=tracker_id)
     if not db_tracker:
         raise HTTPException(status_code=404, detail="Tracker not found")
