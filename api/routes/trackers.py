@@ -5,6 +5,7 @@ from models import trackers
 from sql_app import crud
 from sql_app.database import get_db
 from sqlalchemy.orm import Session
+from typing import Optional
 
 router = APIRouter()
 token_auth_scheme = HTTPBearer()
@@ -14,17 +15,19 @@ def validate_token(token):
     result = VerifyToken(token.credentials).verify()
     if result.get("status"):
         raise HTTPException(status_code=400, detail=result)
+    return result
 
 
-@router.get("/", response_model=list[trackers.Tracker])
+@router.get("/", response_model=Optional[list[trackers.Tracker]])
 def read_trackers_all(
     skip: int = 0,
     limit: int = 100,
     db: Session = Depends(get_db),
     token: HTTPAuthorizationCredentials = Depends(token_auth_scheme),
 ):
-    validate_token(token)
-    return crud.get_trackers(db, skip=skip, limit=limit)
+    result = validate_token(token)
+    result = crud.get_trackers(db, skip=skip, limit=limit)
+    return result
 
 
 @router.get("/{tracker_id}", response_model=trackers.Tracker)

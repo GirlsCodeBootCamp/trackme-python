@@ -3,8 +3,18 @@ from models import trackers, users
 from sql_app import crud
 from sql_app.database import get_db
 from sqlalchemy.orm import Session
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from api.routes.utils import VerifyToken
 
 router = APIRouter()
+token_auth_scheme = HTTPBearer()
+
+
+def validate_token(token):
+    result = VerifyToken(token.credentials).verify()
+    if result.get("status"):
+        raise HTTPException(status_code=400, detail=result)
+    return result
 
 
 # Create user
@@ -22,7 +32,13 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 
 
 @router.get("/{user_id}", response_model=users.User)
-def read_user_by_id(user_id: int, db: Session = Depends(get_db)):
+def read_user_by_id(
+    user_id: str,
+    db: Session = Depends(get_db),
+    token: HTTPAuthorizationCredentials = Depends(token_auth_scheme),
+):
+    validate_token(token)
+
     db_user = crud.get_user(db, user_id=user_id)
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
