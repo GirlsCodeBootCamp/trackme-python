@@ -51,7 +51,7 @@ def read_user_by_id(
 
 @router.post("/{user_id}/tracker", response_model=trackers.Tracker)
 def create_user_tracker(
-    user_id: int, tracker: trackers.TrackerCreate, db: Session = Depends(get_db)
+    user_id: str, tracker: trackers.TrackerCreate, db: Session = Depends(get_db)
 ):
     db_tracker = crud.create_user_tracker(db, tracker, user_id)
     if not db_tracker:
