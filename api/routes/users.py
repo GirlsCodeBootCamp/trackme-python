@@ -19,10 +19,14 @@ def validate_token(token):
 
 # Create user
 @router.post("/", response_model=users.User)
-def create_user(user: users.UserCreate, db: Session = Depends(get_db)):
-    db_user = crud.get_user_by_email(db, email=user.email)
+def create_user(
+    user: users.UserCreate,
+    db: Session = Depends(get_db),
+    token: HTTPAuthorizationCredentials = Depends(token_auth_scheme),
+):
+    db_user = crud.get_user(db, user.id)
     if db_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
+        print(f"user exists, {user.username}, skipping creation")
     return crud.create_user(db, user)
 
 
