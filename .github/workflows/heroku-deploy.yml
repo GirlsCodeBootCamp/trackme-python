@@ -22,18 +22,18 @@ jobs:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  build:
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-      # Deploy application after successful lint
-      - name: Deploy to Heroku
-        uses: akhileshns/heroku-deploy@v3.12.12
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "trackme-ninja-api"
-          heroku_email: ${{ secrets.HEROKU_EMAIL }}
-          usedocker: true
-          # procfile: "web: uvicorn main:app --port 17995 --host 0.0.0.0"
+  # build:
+  #   runs-on: ubuntu-latest
+  #   needs: lint
+  #   steps:
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v2
+  #     # Deploy application after successful lint
+  #     - name: Deploy to Heroku
+  #       uses: akhileshns/heroku-deploy@v3.12.12
+  #       with:
+  #         heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+  #         heroku_app_name: "trackme-ninja-api"
+  #         heroku_email: ${{ secrets.HEROKU_EMAIL }}
+  #         usedocker: true
+  #         # procfile: "web: uvicorn main:app --port 17995 --host 0.0.0.0"
