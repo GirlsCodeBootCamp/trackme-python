@@ -1,10 +1,10 @@
+from api.routes.utils import VerifyToken
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from models import trackers, users
 from sql_app import crud
 from sql_app.database import get_db
 from sqlalchemy.orm import Session
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from api.routes.utils import VerifyToken
 
 router = APIRouter()
 token_auth_scheme = HTTPBearer()
