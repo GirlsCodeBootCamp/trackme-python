@@ -70,7 +70,7 @@ def delete_tracker_by_id(data_base: Session, tracker_id: int):
     return db_tracker
 
 
-def get_user(data_base: Session, user_id: int):
+def get_user(data_base: Session, user_id: str):
     return (
         data_base.query(models.User)
         .options(joinedload(models.User.trackers))
@@ -94,14 +94,14 @@ def get_users(data_base: Session, skip: int = 0, limit: int = 100):
 
 
 def create_user(data_base: Session, user: users.UserCreate):
-    db_user = models.User(email=user.email, username=user.username)
+    db_user = models.User(id=user.id, email=user.email, username=user.username)
     data_base.add(db_user)
     data_base.commit()
     data_base.refresh(db_user)
     return db_user
 
 
-def create_user_tracker(data_base: Session, item: trackers.TrackerCreate, user_id: int):
+def create_user_tracker(data_base: Session, item: trackers.TrackerCreate, user_id: str):
     # check if user exist, get its data
     db_user = get_user(data_base, user_id)
     if db_user is None:

@@ -6,6 +6,7 @@ from .trackers import Tracker
 
 
 class UserBase(BaseModel):
+    id: str
     username: str
     email: str
 
@@ -15,7 +16,6 @@ class UserCreate(UserBase):
 
 
 class User(UserBase):
-    id: int
     trackers: List[Tracker] = []
 
     class Config:

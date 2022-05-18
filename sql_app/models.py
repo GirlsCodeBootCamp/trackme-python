@@ -23,7 +23,7 @@ user_tracker = Table(
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(String, primary_key=True, index=True)
     username = Column(String, nullable=False)
     email = Column(String, unique=True, index=True)
 
