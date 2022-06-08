@@ -48,9 +48,10 @@ def read_tracker_by_id(
 @router.post("/", response_model=trackers.Tracker)
 def create_tracker(tracker: trackers.TrackerCreate, db: Session = Depends(get_db)):
     db_tracker = crud.get_tracker_by_url(db, url_address=tracker.url_address)
-    if db_tracker:
-        raise HTTPException(status_code=400, detail="URL address already registered")
-    return crud.create_tracker(db, tracker)
+    if not db_tracker:
+        db_tracker = crud.create_tracker(db, tracker)
+    db_tracker = crud.create_user_tracker(db, tracker, tracker.user_id)
+    return db_tracker
 
 
 @router.put("/{tracker_id}/", response_model=trackers.Tracker)

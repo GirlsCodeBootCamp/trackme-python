@@ -10,7 +10,7 @@ class TrackerBase(BaseModel):
 
 
 class TrackerCreate(TrackerBase):
-    pass
+    user_id: str
 
 
 class Tracker(TrackerBase):
