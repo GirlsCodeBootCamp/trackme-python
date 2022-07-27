@@ -22,13 +22,14 @@ def get_application():
         allow_methods=["*"],
         allow_headers=["*"],
     )
+    # send_notification('test', BackgroundTasks())
     return application
 
 
 print("This is test message")
 models.Base.metadata.create_all(bind=engine)
-
 app = get_application()
+# change_tracker.change_tracker.runme()
 
 if __name__ == "__main__":
     server_port = os.getenv("PORT") or 8000

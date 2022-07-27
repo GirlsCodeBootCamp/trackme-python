@@ -1,0 +1,14 @@
+table {
+  table-layout: fixed;
+}
+
+td {
+  word-wrap: break-word;
+  margin-top: 12px;
+}
+
+.text_column {
+  width: 500px;
+  overflow: hidden;
+  display: inline-block;
+}
