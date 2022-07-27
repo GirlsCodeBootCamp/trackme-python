@@ -1,4 +1,5 @@
 from typing import Optional
+from email.mime.text import MIMEText
 
 from api.routes.utils import VerifyToken
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
@@ -9,7 +10,8 @@ from sql_app.database import get_db
 from sqlalchemy.orm import Session
 import time
 import difflib
-
+import smtplib
+import ssl
 import urllib3
 from bs4 import BeautifulSoup as bs
 import re
@@ -79,8 +81,31 @@ def delete_tracker_by_id(tracker_id: int, db: Session = Depends(get_db)):
     return crud.delete_tracker_by_id(db, tracker_id=tracker_id)
 
 
+def send_email(receiver_email, message):
+    sender_email = "info@trackme.ninja"
+    password = "9tur!W4jJzrM"
+    smtp_server = "smtp.zoho.com"
+    port = 465  # For starttls
+    msg = MIMEText(message)
+    msg["Subject"] = "Content changed"
+    msg["From"] = sender_email
+    msg["To"] = receiver_email
+    context = ssl.create_default_context()
+    try:
+        with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+            server.login(sender_email, password)
+            server.sendmail(msg.get("From"), msg["To"], msg.as_string())
+    except Exception as e:
+        # Print any error messages to stdout
+        print(e)
+    print(f"{message} sent to {receiver_email}")
+
+
 def check_tracker(tracker: str, db):
     print(tracker.id, tracker.url_address)
+    if not tracker.owners:
+        return
+
     old_content = tracker.content
 
     http = urllib3.PoolManager()
@@ -93,19 +118,26 @@ def check_tracker(tracker: str, db):
         changed = False
         if tracker.content:
             i = 0
-            for text in difflib.unified_diff(new_content.split("\n"), old_content.split("\n")):
+            for text in difflib.unified_diff(
+                new_content.split("\n"), old_content.split("\n")
+            ):
                 if text[:3] not in ("+++", "---", "@@ "):
                     changed = True
-                    print(text)
+                    # print(text)
                     i += 1
         if changed or not tracker.content:
             tracker.content = new_content
             crud.update_tracker(db, tracker.id, tracker)
             # TODO Add timestamp when changed
             # TODO send an email, add task to background task?
+            message = f"Subject: New changes on website \n \n the tracker {tracker.url_address} has been changed"
+            for user in tracker.owners:
+                print(user.email, message)
+                send_email(user.email, message)
             # TODO add to UI and/or API validation of the URL when creating a tracker
     except Exception:
         print("URL not valid")
+
 
 # testing endpoint
 @router.post("/track")
@@ -113,6 +145,8 @@ async def send_notification(
     background_tasks: BackgroundTasks, db: Session = Depends(get_db)
 ):
     result = crud.get_trackers(db)
+
     for tr in result:
         background_tasks.add_task(check_tracker, tr, db)
+    print("all trackers have been checked")
     return result
